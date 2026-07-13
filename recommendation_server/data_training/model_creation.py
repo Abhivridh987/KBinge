@@ -12,10 +12,14 @@ import json
 import os
 import joblib
 
+print('Printed Important Packages')
+
 warnings.filterwarnings('ignore')
 
 # Import Database
 from pymongo import MongoClient
+
+print('Imported MongoDB')
 
 uri = "mongodb+srv://kbingeabhivridh:kbingeabhivridh%40123@cluster0.nqlwryf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 client = MongoClient(uri)
@@ -23,11 +27,12 @@ client = MongoClient(uri)
 db = client["test"]
 collection = db["Movie"]
 
-
+print('Imported Database')
 
 df = pd.DataFrame(list(collection.find()))
 
 df = df.sort_values(by="Name").reset_index(drop=True)
+df = df.drop(["topPicks", "updatedAt", "createdAt", "__v"], axis=1)
 df_copy = df.copy()
 
 # **Database Preprocessing**
@@ -84,7 +89,10 @@ for i in range(df.shape[0]):
 
 
 a = list(df.columns)
+print(a)
 genre_str_list = a[13:44]
+
+print(genre_str_list)
 
 for genre in genre_str_list:
   df[genre] = df[genre].fillna(int(0))
@@ -151,19 +159,24 @@ df = df.drop(columns=['_id', 'Unnamed: 0', 'img url', 'Genre', 'Content Rating']
 text_features = []
 numeric_features = []
 for col in df.columns:
-  if df[col].dtype == 'O':
+  if df[col].dtype == 'str':
     text_features.append(col)
   else:
     numeric_features.append(col)
 
+print('Textual Features and Numeric Features')
+print('-----------------------------------')
+print('Textual Features:\n', text_features)
+print('Numeric Features:\n', numeric_features)
+print('-----------------------------------')
 
 #Numeric features are divided into binary valued and continuous valued
 numeric_features_binary = numeric_features[3:]
-numeric_featues_continuous = numeric_features[:3]
+numeric_features_continuous = numeric_features[:3]
 
 text_features_df = df['Name'] + ' ' + df['Name'] + df['Sinopsis'] + ' '+ df['Sinopsis'] + ' ' + df['Sinopsis'] + ' ' + df['Sinopsis'] + ' ' + df['Sinopsis'] + ' ' + df['Tags'] + ' ' + df['Tags'] + ' ' + df['Tags'] + ' ' + df['Tags'] + ' ' + df['Tags'] + ' ' + df['Network'] + ' ' + df['Main Cast']
 numeric_features_binary_df = df[numeric_features_binary]
-numeric_features_continuous_df = df[numeric_featues_continuous]
+numeric_features_continuous_df = df[numeric_features_continuous]
 
 
 #Text vectorizer

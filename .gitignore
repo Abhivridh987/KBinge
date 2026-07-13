@@ -1,2 +1,4 @@
-recommendation_server/files 
-recommendation_server/__pycache__
+backend_server/__pycache__
+backend_server/node_modules
+backend_server/.env
+backend_server/package-lock.json

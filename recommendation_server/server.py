@@ -1,9 +1,19 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import json
 import joblib
 import difflib
 
 app = FastAPI()
+
+# enable CORS for all origins (adjust `allow_origins` as needed)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 with open('files/movies.json','r') as file:
     movies_json = json.load(file)
